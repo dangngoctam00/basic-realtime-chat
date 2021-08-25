@@ -1,0 +1,30 @@
+<div class="container">
+  <div>
+    <input
+      [(ngModel)]="currentUser"
+      type="text"
+      placeholder="Enter username..."
+      class="text-input"/>
+    <button
+      class="join-room-btn"
+      (click)="joinRoom()"
+    >Join</button>
+  </div>
+  <hr>
+  <div class="message-wrapper">
+    <div *ngFor="let message of messages"
+         [ngClass]="message.user === currentUser ? 'isMe' : 'notMe'"
+    >
+      <div class="message"
+      >
+        {{message.content}}
+      </div>
+    </div>
+  </div>
+  <app-chat-input
+    (onSendMessage)="handleOnSend($event)"
+    class="input-wrapper">
+
+  </app-chat-input>
+</div>
+
