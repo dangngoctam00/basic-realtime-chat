@@ -1,5 +1,4 @@
 .container {
-  position: relative;
   flex: 0 0 100%;
 }
 
@@ -29,17 +28,20 @@ hr {
 }
 
 .input-wrapper {
-  position: absolute;
-  bottom: 0;
   display: flex;
   align-items: center;
   width: 100%;
 }
 
-//.message-wrapper {
-//  display: flex;
-//  flex-direction: column-reverse;
-//}
+.message-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 600px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
 
 .message {
   background: #0084ff;

@@ -14,7 +14,7 @@ export class ChatComponent implements OnInit {
   currentUser: string = '';
   webSocketAPI: WebSocketAPI;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.webSocketAPI = new WebSocketAPI(this);
@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit {
     console.log('Message Received from Server :: ');
     console.log(message);
     if (message.user !== this.currentUser) {
-      this.messages.push(message);
+      this.messages.unshift(message);
     }
     console.log('Messages: ');
     console.log(this.messages);
@@ -33,7 +33,7 @@ export class ChatComponent implements OnInit {
   handleOnSend(message: Message) {
     message = {...message, user: this.currentUser};
     this.webSocketAPI?._send(message);
-    this.messages.push(message)
+    this.messages.unshift(message)
   }
 
   joinRoom() {

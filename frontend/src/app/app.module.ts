@@ -8,12 +8,14 @@ import { ChatInputComponent } from './chat-input/chat-input.component';
 import {FormsModule} from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from "@angular/material/icon";
+import {ReverseArray} from "./utils/reverse-array";
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    ChatInputComponent
+    ChatInputComponent,
+    ReverseArray
   ],
   imports: [
     BrowserModule,
