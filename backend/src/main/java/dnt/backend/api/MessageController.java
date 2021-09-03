@@ -7,9 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -31,5 +32,13 @@ public class MessageController {
         Message message = new Message(dto.getContent(), dto.getSender(), dto.getRecipient());
         chatService.saveMessage(message);
         messagingTemplate.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
+    }
+
+    @GetMapping("/messages/{sender}/{recipient}")
+    public List<MessageDto> getMessage(@PathVariable String sender, @PathVariable String recipient) {
+        return this.chatService.getMessage(sender, recipient)
+                .stream()
+                .map(message -> new MessageDto(message.getContent(), message.getSender(), message.getRecipient(), message.getTime()))
+                .collect(Collectors.toList());
     }
 }
