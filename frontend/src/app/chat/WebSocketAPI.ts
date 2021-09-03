@@ -6,18 +6,18 @@ import Message from "../chat-model/message";
 export default class WebSocketAPI {
   webSocketEndPoint = 'http://localhost:8080/ws';
   listenedChannel = '/channel/1';
-  messageBroker = '/chat/1';
+  messageBroker = '/app/chat';
   stompClient: any;
   chatComponent: ChatComponent;
   constructor(chatComponent: ChatComponent) {
     this.chatComponent = chatComponent;
   }
-  _connect() {
+  _connect(user: string) {
     console.log('Initialize WebSocket Connection');
     const ws = new SockJS(this.webSocketEndPoint);
     this.stompClient = Stomp.over(ws);
     this.stompClient.connect({}, (frame: any) => {
-      this.stompClient.subscribe(this.listenedChannel, (sdkEvent: any) => {
+      this.stompClient.subscribe('/user/' + user + '/queue/messages', (sdkEvent: any) => {
         this.onMessageReceived(sdkEvent);
       });
     }, this.errorCallBack);
@@ -34,7 +34,7 @@ export default class WebSocketAPI {
   errorCallBack(error: any) {
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
-      this._connect();
+      // this._connect();
     }, 5000);
   }
 
