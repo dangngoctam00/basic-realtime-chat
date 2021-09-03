@@ -1,20 +1,35 @@
 package dnt.backend.api;
 
-import dnt.backend.model.Message;
+import dnt.backend.model.dto.MessageDto;
+import dnt.backend.model.entity.Message;
+import dnt.backend.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api")
 @Slf4j
 public class MessageController {
-    @MessageMapping("/1")
-    @SendTo("/channel/1")
-    public Message sendMessage(Message message) {
-        log.info("Controller received message: " + message.getContent());
-        return message;
+
+    private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    public MessageController(ChatService chatService, SimpMessagingTemplate messagingTemplate) {
+        this.chatService = chatService;
+        this.messagingTemplate = messagingTemplate;
+    }
+
+    @MessageMapping("/chat")
+    public void sendMessage(@RequestBody MessageDto dto) {
+        log.info("Controller received message: " + dto.getContent());
+        Message message = new Message(dto.getContent(), dto.getUser());
+        chatService.saveMessage(message);
+        messagingTemplate.convertAndSendToUser(message.getUser(), "/queue/messages", message);
     }
 }
