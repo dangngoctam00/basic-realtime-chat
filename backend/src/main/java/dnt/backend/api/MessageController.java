@@ -28,8 +28,8 @@ public class MessageController {
     @MessageMapping("/chat")
     public void sendMessage(@RequestBody MessageDto dto) {
         log.info("Controller received message: " + dto.getContent());
-        Message message = new Message(dto.getContent(), dto.getUser());
+        Message message = new Message(dto.getContent(), dto.getSender(), dto.getRecipient());
         chatService.saveMessage(message);
-        messagingTemplate.convertAndSendToUser(message.getUser(), "/queue/messages", message);
+        messagingTemplate.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
     }
 }

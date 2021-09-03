@@ -21,12 +21,14 @@ public class Message {
     private Long id;
 
     private String content;
-    private String user;
+    private String sender;
+    private String recipient;
     private Instant time;
 
-    public Message(String content, String user) {
+    public Message(String content, String sender, String recipient) {
         this.content = content;
-        this.user = user;
+        this.sender = sender;
+        this.recipient = recipient;
         this.time = Instant.now();
     }
 }

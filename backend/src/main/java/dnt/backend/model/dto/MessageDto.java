@@ -11,5 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MessageDto {
     private String content;
-    private String user;
+    private String sender;
+    private String recipient;
 }
