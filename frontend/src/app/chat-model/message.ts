@@ -1,9 +1,13 @@
 export default class Message {
   content: string;
-  user?: string;
+  sender: string;
+  recipient: string;
+  time?: Date;
 
-  constructor(content: string, user?: string) {
+  constructor(content: string, sender: string, recipient: string, time?: Date) {
     this.content = content;
-    this.user = user;
+    this.sender = sender;
+    this.recipient = recipient;
+    this.time = time;
   }
 }

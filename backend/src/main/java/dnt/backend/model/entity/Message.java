@@ -23,12 +23,14 @@ public class Message {
     private String content;
     private String sender;
     private String recipient;
+    private String chatId;
     private Instant time;
 
-    public Message(String content, String sender, String recipient) {
+    public Message(String content, String sender, String recipient, String chatId) {
         this.content = content;
         this.sender = sender;
         this.recipient = recipient;
+        this.chatId = chatId;
         this.time = Instant.now();
     }
 }

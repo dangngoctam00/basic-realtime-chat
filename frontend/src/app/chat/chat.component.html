@@ -6,19 +6,21 @@
       [friends$]="friends$"
     >
     </app-friends>
-    <div class="message-wrapper">
-      <div *ngFor="let message of messages"
-           [ngClass]="message.user === currentUser ? 'isMe' : 'notMe'">
-        <div class="message">
-          {{message.content}}
+    <div class="input-message">
+      <div class="message-wrapper">
+        <div *ngFor="let message of messages"
+             [ngClass]="message.sender === currentUser ? 'isMe' : 'notMe'">
+          <div class="message">
+            {{message.content}}
+          </div>
         </div>
       </div>
+      <app-chat-input
+        (onSendMessage)="handleOnSend($event)"
+        class="input-wrapper">
+      </app-chat-input>
     </div>
   </div>
-  <app-chat-input
-    (onSendMessage)="handleOnSend($event)"
-    class="input-wrapper">
 
-  </app-chat-input>
 </div>
 

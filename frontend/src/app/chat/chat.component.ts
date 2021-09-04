@@ -14,8 +14,9 @@ import {map, switchMap} from "rxjs/operators";
 })
 export class ChatComponent implements OnInit {
 
-  messages: Message[] = [];
+  messages: Message[];
   currentUser: string = '';
+  targetUser: string = '';
   friends$: Observable<User[]>;
   webSocketAPI: WebSocketAPI;
 
@@ -24,25 +25,25 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.webSocketAPI = new WebSocketAPI(this);
     this.friends$ = this._route.paramMap.pipe(
-      map(params => params.get('user')),
+      map(params => {
+        this.currentUser = params.get('user');
+        this.webSocketAPI._connect(this.currentUser);
+        return this.currentUser;
+      }),
       switchMap(user => this.chatService.getFriends(user))
     )
   }
 
   handleMessageArrived(message: Message) {
-    console.log('Message Received from Server :: ');
-    console.log(message);
-    if (message.user !== this.currentUser) {
-      this.messages.unshift(message);
-    }
-    console.log('Messages: ');
-    console.log(this.messages);
+    console.log('Message Received from Server :: ', message);
+    this.messages.unshift(message);
   }
 
-  handleOnSend(message: Message) {
-    message = {...message, user: this.currentUser};
+  handleOnSend(content: string) {
+    console.log('Send message: ' + content);
+    const message: Message = {content: content, sender: this.currentUser, recipient: this.targetUser};
     this.webSocketAPI?._send(message);
-    this.messages.unshift(message)
+    this.messages.unshift(message);
   }
 
   joinRoom() {
@@ -50,6 +51,8 @@ export class ChatComponent implements OnInit {
   }
 
   onChosenUser(user: string) {
-    console.log(user);
+    console.log('On chosenUser in Chat component', user);
+    this.targetUser = user;
+    this.chatService.getMessages(this.currentUser, user).subscribe(response => this.messages = response);
   }
 }

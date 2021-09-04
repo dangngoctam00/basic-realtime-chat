@@ -10,20 +10,22 @@ export class ChatInputComponent implements OnInit {
 
   textMessage = '';
 
-  @Output() public onSendMessage = new EventEmitter<Message>();
+  @Output() public onSendMessage = new EventEmitter<string>();
 
   constructor() {}
 
   ngOnInit(): void {}
 
   send() {
-    this.onSendMessage.emit({content: this.textMessage});
+    if (this.textMessage !== '') {
+      this.onSendMessage.emit(this.textMessage);
+    }
     this.textMessage = '';
   }
 
   onKeyDown(event) {
     console.log(event.key);
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && this.textMessage !== '') {
       this.send();
     }
   }

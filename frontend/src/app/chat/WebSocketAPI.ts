@@ -5,7 +5,6 @@ import Message from "../chat-model/message";
 
 export default class WebSocketAPI {
   webSocketEndPoint = 'http://localhost:8080/ws';
-  listenedChannel = '/channel/1';
   messageBroker = '/app/chat';
   stompClient: any;
   chatComponent: ChatComponent;
@@ -39,7 +38,7 @@ export default class WebSocketAPI {
   }
 
   _send(message: Message) {
-    console.log('send message');
+    console.log('send message', message);
     this.stompClient.send(this.messageBroker, {}, JSON.stringify(message));
   }
 

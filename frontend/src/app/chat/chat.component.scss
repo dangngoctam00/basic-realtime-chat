@@ -33,6 +33,11 @@ hr {
   //border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 5px;
+  overflow-y: auto;
+}
+
+.input-message {
+  width: 100%;
 }
 
 .message {
