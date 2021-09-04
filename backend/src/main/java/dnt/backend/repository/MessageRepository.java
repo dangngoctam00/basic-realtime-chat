@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long>, MessageRepositoryCustom {
-    List<Message> findAllBySenderAndRecipientOrderByTimeDesc(String sender, String recipient);
+    List<Message> findAllByChatIdOrderByTimeDesc(String chatId);
 }

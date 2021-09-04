@@ -1,7 +1,9 @@
 package dnt.backend.api;
 
 import dnt.backend.model.dto.MessageDto;
+import dnt.backend.model.entity.ChatRoom;
 import dnt.backend.model.entity.Message;
+import dnt.backend.service.ChatRoomService;
 import dnt.backend.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +20,23 @@ import java.util.stream.Collectors;
 public class MessageController {
 
     private final ChatService chatService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate template;
+    private final ChatRoomService chatRoomService;
 
     @Autowired
-    public MessageController(ChatService chatService, SimpMessagingTemplate messagingTemplate) {
+    public MessageController(ChatService chatService, SimpMessagingTemplate template, ChatRoomService chatRoomService) {
         this.chatService = chatService;
-        this.messagingTemplate = messagingTemplate;
+        this.template = template;
+        this.chatRoomService = chatRoomService;
     }
 
     @MessageMapping("/chat")
     public void sendMessage(@RequestBody MessageDto dto) {
         log.info("Controller received message: " + dto.getContent());
-        Message message = new Message(dto.getContent(), dto.getSender(), dto.getRecipient());
+        String chatId = this.chatRoomService.getChatId(dto.getSender(), dto.getRecipient(), true).get();
+        Message message = new Message(dto.getContent(), dto.getSender(), dto.getRecipient(), chatId);
         chatService.saveMessage(message);
-        messagingTemplate.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
+        template.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
     }
 
     @GetMapping("/messages/{sender}/{recipient}")
