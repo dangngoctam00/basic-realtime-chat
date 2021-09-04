@@ -1,7 +1,7 @@
 <div class="friend-container">
   <ul class="friends">
     <li class="friend"
-        *ngFor="let friend of friends$ | async"
+        *ngFor="let friend of friends"
         (click)="chooseUser($event)"
         [ngClass]="chosenUser === friend.username ? 'active' : ''"
     >{{friend.username}}</li>

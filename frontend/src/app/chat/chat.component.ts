@@ -17,21 +17,27 @@ export class ChatComponent implements OnInit {
   messages: Message[];
   currentUser: string = '';
   targetUser: string = '';
-  friends$: Observable<User[]>;
+  friends: User[];
   webSocketAPI: WebSocketAPI;
 
   constructor(private chatService: ChatService, private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.webSocketAPI = new WebSocketAPI(this);
-    this.friends$ = this._route.paramMap.pipe(
+    this._route.paramMap.pipe(
       map(params => {
         this.currentUser = params.get('user');
         this.webSocketAPI._connect(this.currentUser);
         return this.currentUser;
       }),
       switchMap(user => this.chatService.getFriends(user))
-    )
+    ).subscribe(friends => {
+      console.log('friends', friends);
+      if (friends.length !== 0) {
+        this.onChosenUser(friends[0].username);
+      }
+      this.friends = friends;
+    })
   }
 
   handleMessageArrived(message: Message) {
